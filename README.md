@@ -5,8 +5,8 @@
 项目地址请见:
 
   ```
-	https://github.com/iamcoach/pos
-	```
+  https://github.com/iamcoach/pos
+  ```
 ## 作业进度
 
 第一周：pos_v1 (ongoing)
