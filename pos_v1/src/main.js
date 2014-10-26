@@ -8,23 +8,44 @@ function getItemFrom(barcode) {
     return null;
 }
 
+function getPosition(item, list) {
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].barcode == item.barcode) return i;
+    };
+    return null;
+}
+
+function merge(shoppingList) {
+    var mergedList = new Array();
+    for (var i = 0; i < shoppingList.length; i++) {
+        var j = getPosition(shoppingList[i], mergedList);
+        if (j == null) {
+            mergedList.push({ barcode: shoppingList[i].barcode, amount: 1 });
+        }
+        else {
+            mergedList[j].amount ++;
+        };
+    };
+    return mergedList;
+}
+
 function printInventory(inputs) {
     var shoppingList  = new Array();
 
     for (var i = 0; i < inputs.length; i++) {
         var barcode = inputs[i];
-        var number  = 1;
+        var amount  = 1;
         var code = inputs[i].split("-");
         if (code.length == 2) {
             barcode = code[0];
-            number  = code[1];
+            amount  = code[1];
         };
         var item = getItemFrom(barcode);
-        for (var j = 0; j < number; j++) {
+        for (var j = 0; j < amount; j++) {
             shoppingList.push(item);
         };
     };
-
+    merge(shoppingList);
     var inventory =
             '***<没钱赚商店>购物清单***\n' +
             '名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)\n' +
