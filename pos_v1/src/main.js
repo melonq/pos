@@ -1,4 +1,30 @@
-function printInventory(){
+function getItemFrom(barcode) {
+    var items = loadAllItems();
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].barcode == barcode) {
+            return items[i];
+        };
+    };
+    return null;
+}
+
+function printInventory(inputs) {
+    var shoppingList  = new Array();
+
+    for (var i = 0; i < inputs.length; i++) {
+        var barcode = inputs[i];
+        var number  = 1;
+        var code = inputs[i].split("-");
+        if (code.length == 2) {
+            barcode = code[0];
+            number  = code[1];
+        };
+        var item = getItemFrom(barcode);
+        for (var j = 0; j < number; j++) {
+            shoppingList.push(item);
+        };
+    };
+
     var inventory =
             '***<没钱赚商店>购物清单***\n' +
             '名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)\n' +
