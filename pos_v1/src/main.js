@@ -29,6 +29,58 @@ function merge(shoppingList) {
     return mergedList;
 }
 
+function getPromotion(type) {
+    var promotions = loadPromotions();
+    for (var i = 0; i < promotions.length; i++) {
+        if (promotions[i].type == type) {
+            return promotions[i];
+        };
+    };
+}
+
+function search(key, array) {
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] == key)
+            return true;
+    };
+    return false;
+}
+
+function getInventoryFrom(list) {
+    var inventory = '***<没钱赚商店>购物清单***\n';
+    var promotion = getPromotion("BUY_TWO_GET_ONE_FREE");
+    var gifts = new Array();
+    var total = 0;
+    var discount = 0;
+    for (var i = 0; i < list.length; i++) {
+        var item = getItemFrom(list[i].barcode);
+        inventory += '名称：' + item.name + '，数量：' + list[i].amount + item.unit +
+                     '，单价：' + item.price.toFixed(2) + '(元)，'
+        if (search(list[i].barcode, promotion.barcodes)) {
+            var giftedNum = Math.floor(list[i].amount / 3);
+            gifts.push({ name: item.name, amount: giftedNum, unit: item.unit });
+            discount += item.price * giftedNum;
+            list[i].price = item.price * (list[i].amount - giftedNum);
+            inventory += '小计：' + list[i].price.toFixed(2) + '(元)\n';
+        }
+        else {
+            list[i].price = item.price * list[i].amount;
+            inventory += '小计：' + list[i].price.toFixed(2) + '(元)\n';
+        };
+        total += list[i].price;
+    };
+    inventory += '----------------------\n' + '挥泪赠送商品：\n';
+    for (var i = 0; i < gifts.length; i++) {
+        inventory += '名称：' + gifts[i].name + '，数量：' + gifts[i].amount + 
+                     gifts[i].unit + '\n';
+    };
+    inventory += '----------------------\n' +
+                 '总计：' + total.toFixed(2) + '(元)\n' +
+                 '节省：' + discount.toFixed(2) + '(元)\n' +
+                 '**********************';
+    return inventory;
+}
+
 function printInventory(inputs) {
     var shoppingList  = new Array();
 
@@ -45,19 +97,9 @@ function printInventory(inputs) {
             shoppingList.push(item);
         };
     };
-    merge(shoppingList);
-    var inventory =
-            '***<没钱赚商店>购物清单***\n' +
-            '名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)\n' +
-            '名称：荔枝，数量：2斤，单价：15.00(元)，小计：30.00(元)\n' +
-            '名称：方便面，数量：3袋，单价：4.50(元)，小计：9.00(元)\n' +
-            '----------------------\n' +
-            '挥泪赠送商品：\n' +
-            '名称：雪碧，数量：1瓶\n' +
-            '名称：方便面，数量：1袋\n' +
-            '----------------------\n' +
-            '总计：51.00(元)\n' +
-            '节省：7.50(元)\n' +
-            '**********************';
+
+    var mergedList = merge(shoppingList);
+    var inventory  = getInventoryFrom(mergedList);
+
     console.log(inventory);
 }
