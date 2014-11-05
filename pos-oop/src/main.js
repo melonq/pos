@@ -56,8 +56,26 @@ function getGiftsInventory(gifts) {
     return giftsInventory;
 }
 
+function getDatetime() {
+    dateDigitToString = function (num) {
+            return num < 10 ? '0' + num : num;
+        };
+    var currentDate = new Date(),
+        year = dateDigitToString(currentDate.getFullYear()),
+        month = dateDigitToString(currentDate.getMonth() + 1),
+        date = dateDigitToString(currentDate.getDate()),
+        hour = dateDigitToString(currentDate.getHours()),
+        minute = dateDigitToString(currentDate.getMinutes()),
+        second = dateDigitToString(currentDate.getSeconds()),
+        formattedDateString = year + '年' + month + '月' + date + '日 ' + hour + ':' + minute + ':' + second;
+    return formattedDateString;
+}
+
 function getInventoryFrom(list) {
+    var separator = '----------------------';
+    var borderline = '**********************';
     var inventory = '***<没钱赚商店>购物清单***\n';
+    inventory += '打印时间：' + getDatetime() + '\n' + separator + '\n';
     var promotionType = "BUY_TWO_GET_ONE_FREE"
     var promotion = getPromotion(promotionType);
     var gifts = new Array();
@@ -80,11 +98,10 @@ function getInventoryFrom(list) {
         total += list[i].price;
     };
     inventory += getGiftsInventory(gifts);
-    inventory += '----------------------\n' +
+    inventory += separator + '\n' +
                  '总计：' + total.toFixed(2) + '(元)\n' +
                  '节省：' + discount.toFixed(2) + '(元)\n' +
-                 '**********************';
-                 
+                 borderline;
     return inventory;
 }
 

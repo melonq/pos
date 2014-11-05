@@ -9,7 +9,9 @@
   ```
 ## 作业进度
 
-第一周：pos_v1 (ongoing)
+第一周：pos_v1 (done)
+
+第二周：pos-oop（ongoing）
 
 
 
