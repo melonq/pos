@@ -46,12 +46,22 @@ function search(key, array) {
     return false;
 }
 
+function getGiftsInventory(gifts) {
+    var total = 0, discount = 0;
+    var giftsInventory = '----------------------\n' + '挥泪赠送商品：\n';
+    for (var i = 0; i < gifts.length; i++) {
+        giftsInventory += '名称：' + gifts[i].name + '，数量：' + gifts[i].amount + 
+                     gifts[i].unit + '\n';
+    };
+    return giftsInventory;
+}
+
 function getInventoryFrom(list) {
     var inventory = '***<没钱赚商店>购物清单***\n';
-    var promotion = getPromotion("BUY_TWO_GET_ONE_FREE");
+    var promotionType = "BUY_TWO_GET_ONE_FREE"
+    var promotion = getPromotion(promotionType);
     var gifts = new Array();
-    var total = 0;
-    var discount = 0;
+    var total = 0, discount = 0;
     for (var i = 0; i < list.length; i++) {
         var item = getItemFrom(list[i].barcode);
         inventory += '名称：' + item.name + '，数量：' + list[i].amount + item.unit +
@@ -69,21 +79,17 @@ function getInventoryFrom(list) {
         };
         total += list[i].price;
     };
-    inventory += '----------------------\n' + '挥泪赠送商品：\n';
-    for (var i = 0; i < gifts.length; i++) {
-        inventory += '名称：' + gifts[i].name + '，数量：' + gifts[i].amount + 
-                     gifts[i].unit + '\n';
-    };
+    inventory += getGiftsInventory(gifts);
     inventory += '----------------------\n' +
                  '总计：' + total.toFixed(2) + '(元)\n' +
                  '节省：' + discount.toFixed(2) + '(元)\n' +
                  '**********************';
+                 
     return inventory;
 }
 
-function printInventory(inputs) {
+function seperateInputs(inputs) {
     var shoppingList  = new Array();
-
     for (var i = 0; i < inputs.length; i++) {
         var barcode = inputs[i];
         var amount  = 1;
@@ -97,6 +103,11 @@ function printInventory(inputs) {
             shoppingList.push(item);
         };
     };
+    return shoppingList;
+}
+
+function printInventory(inputs) {
+    var shoppingList = seperateInputs(inputs);
 
     var mergedList = merge(shoppingList);
     var inventory  = getInventoryFrom(mergedList);
