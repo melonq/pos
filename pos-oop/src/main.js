@@ -10,7 +10,7 @@ function getItemFrom(barcode) {
 
 function getPosition(item, list) {
     for (var i = 0; i < list.length; i++) {
-        if (list[i].barcode == item.barcode) return i;
+        if (list[i].item.barcode == item.barcode) return i;
     };
     return null;
 }
@@ -20,7 +20,7 @@ function merge(shoppingList) {
     for (var i = 0; i < shoppingList.length; i++) {
         var j = getPosition(shoppingList[i], mergedList);
         if (j == null) {
-            mergedList.push({ barcode: shoppingList[i].barcode, amount: 1 });
+            mergedList.push({ item: shoppingList[i], amount: 1 });
         }
         else {
             mergedList[j].amount ++;
@@ -38,16 +38,7 @@ function getPromotion(type) {
     };
 }
 
-function search(key, array) {
-    for (var i = 0; i < array.length; i++) {
-        if (array[i] == key)
-            return true;
-    };
-    return false;
-}
-
 function getGiftsInventory(gifts) {
-    var total = 0, discount = 0;
     var giftsInventory = '----------------------\n' + '挥泪赠送商品：\n';
     for (var i = 0; i < gifts.length; i++) {
         giftsInventory += '名称：' + gifts[i].name + '，数量：' + gifts[i].amount + 
@@ -81,10 +72,10 @@ function getInventoryFrom(list) {
     var gifts = new Array();
     var total = 0, discount = 0;
     for (var i = 0; i < list.length; i++) {
-        var item = getItemFrom(list[i].barcode);
+        var item = list[i].item;
         inventory += '名称：' + item.name + '，数量：' + list[i].amount + item.unit +
-                     '，单价：' + item.price.toFixed(2) + '(元)，'
-        if (search(list[i].barcode, promotion.barcodes)) {
+                     '，单价：' + item.price.toFixed(2) + '(元)，';
+        if (promotion.hasItem(item)) {
             var giftedNum = Math.floor(list[i].amount / 3);
             gifts.push({ name: item.name, amount: giftedNum, unit: item.unit });
             discount += item.price * giftedNum;
@@ -125,9 +116,8 @@ function seperateInputs(inputs) {
 
 function printInventory(inputs) {
     var shoppingList = seperateInputs(inputs);
-
-    var mergedList = merge(shoppingList);
-    var inventory  = getInventoryFrom(mergedList);
+    var mergedList   = merge(shoppingList);
+    var inventory    = getInventoryFrom(mergedList);
 
     console.log(inventory);
 }
