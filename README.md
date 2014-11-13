@@ -11,7 +11,9 @@
 
 第一周：pos_v1 (done)
 
-第二周：pos-oop（ongoing）
+第二周：pos-oop（done）
 
-
+第三周：pos-tdd-TW (done)
+	本周我的pair是屈鉴铭，项目地址请见
+	`https://github.com/melonq/Pos_TDD_TW`
 
